@@ -39,9 +39,11 @@ func ec(e error) {
 }
 
 func docRoot(w http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
-	ec(err)
 
+	//err := req.ParseForm()
+	//ec(err)
+
+	// e621 Says this is necessary to avoid them taking a cummy dump on your computer
 	userAgent := "Never gonna give you up / I don't know how to use JSON sorry"
 
 	client := &http.Client{}
@@ -50,17 +52,17 @@ func docRoot(w http.ResponseWriter, req *http.Request) {
 	rand.Seed(time.Now().UnixNano())
 
 	var e6Json E621Json
-	//	var boobTags = []string{
-	//		"boobie",
-	//		"breasts",
-	//		//"boob_fuck",
-	//		//"boob_fondling",
-	//		//"boob_size_difference",
-	//	}
-	//
-	//randomBoobs := boobTags[0] //boobTags[rand.Intn(len(boobTags))]
+	var boobTags = []string{
+		"boobie",
+		"breasts",
+		"boob_fuck",
+		"boob_fondling",
+		"boob_size_difference",
+	}
 
-	boobUrl := "https://e621.net/posts.json?tags=squirrel+paws+boobie" // + randomBoobs
+	randomBoobs := boobTags[rand.Intn(len(boobTags))]
+
+	boobUrl := "https://e621.net/posts.json?tags=squirrel+paws+" + randomBoobs
 
 	request, err := http.NewRequest("GET", boobUrl, nil)
 	ec(err)
