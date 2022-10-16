@@ -85,7 +85,7 @@ func docRoot(w http.ResponseWriter, req *http.Request) {
 
 	for {
 		randomBoobs := boobTags[rand.Intn(len(boobTags))]
-		boobUrl := "https://e621.net/posts.json?tags=squirrel+paws+" + randomBoobs
+		boobUrl := "https://e621.net/posts.json?tags=rating%3Aexplicit+squirrel+paws+" + randomBoobs
 		request, err := http.NewRequest("GET", boobUrl, nil)
 		ec(err)
 		request.Header.Add("User-Agent", userAgent)
