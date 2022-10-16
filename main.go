@@ -16,7 +16,7 @@ const IndexHtml string = "index.gohtml"
 
 //const Error string = "err.gohtml"
 
-type E6Generated struct {
+type E621Json struct {
 	Posts []struct {
 		File struct {
 			Url string
@@ -38,24 +38,18 @@ func ec(e error) {
 	}
 }
 
-type le struct {
-	Result string
-}
-
-var l = le{
-	Result: "asdf",
-}
-
 func docRoot(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	ec(err)
 
-	ua := "Never gonna give you up / I don't know how to use JSON sorry"
+	userAgent := "Never gonna give you up / I don't know how to use JSON sorry"
 
 	client := &http.Client{}
 
+	// Use a pseudo-random value for rand
 	rand.Seed(time.Now().UnixNano())
-	var bj E6Generated
+
+	var e6Json E621Json
 	//	var boobTags = []string{
 	//		"boobie",
 	//		"breasts",
@@ -66,23 +60,24 @@ func docRoot(w http.ResponseWriter, req *http.Request) {
 	//
 	//randomBoobs := boobTags[0] //boobTags[rand.Intn(len(boobTags))]
 
-	boobURL := "https://e621.net/posts.json?tags=squirrel+paws+boobie" // + randomBoobs
+	boobUrl := "https://e621.net/posts.json?tags=squirrel+paws+boobie" // + randomBoobs
 
-	req, e := http.NewRequest("GET", boobURL, nil)
-	ec(e)
+	request, err := http.NewRequest("GET", boobUrl, nil)
+	ec(err)
 
-	req.Header.Add("User-Agent", ua)
+	request.Header.Add("User-Agent", userAgent)
 
-	resp, e := client.Do(req)
-	ec(e)
+	response, err := client.Do(request)
+	ec(err)
 
-	defer resp.Body.Close()
+	defer response.Body.Close()
 
-	result, e := io.ReadAll(resp.Body)
-	ec(e)
-	json.Unmarshal(result, &bj)
-	l.Result = bj.Posts[rand.Intn(len(bj.Posts))].File.Url
-	tpl.ExecuteTemplate(w, IndexHtml, l)
+	responseBody, err := io.ReadAll(response.Body)
+	ec(err)
+
+	json.Unmarshal(responseBody, &e6Json)
+
+	tpl.ExecuteTemplate(w, IndexHtml, e6Json.Posts[rand.Intn(len(e6Json.Posts))].File.Url)
 
 }
 
