@@ -46,6 +46,9 @@ func ec(e error) {
 }
 
 func findExtension(hornyUrl string) {
+	if strings.Contains(hornyUrl, ".gif") {
+		e6Content.Image = true
+	}
 	if strings.Contains(hornyUrl, ".jpeg") {
 		e6Content.Image = true
 	}
