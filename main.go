@@ -34,6 +34,19 @@ type FileExtension struct {
 }
 
 var e6Content FileExtension
+var hornyUrl string
+
+// e621 Says this is necessary to avoid them taking a cummy dump on your computer
+var userAgent string = "Never gonna give you up / I don't know how to use JSON sorry"
+var boobTags []string = []string{
+	"boobie",
+	"breasts",
+	"boob_fuck",
+	"boob_fondling",
+	"boob_size_difference",
+}
+
+var e6Json E621Json
 
 func init() {
 	tpl = template.Must(tpl.ParseGlob("templates/*.gohtml"))
@@ -66,23 +79,13 @@ func findExtension(hornyUrl string) {
 	}
 }
 
-func docRoot(w http.ResponseWriter, req *http.Request) {
-	// e621 Says this is necessary to avoid them taking a cummy dump on your computer
-	userAgent := "Never gonna give you up / I don't know how to use JSON sorry"
-	client := &http.Client{}
+func grabtiddy() {
 	// Use a pseudo-random value for rand
 	rand.Seed(time.Now().UnixNano())
-	var e6Json E621Json
-	var boobTags = []string{
-		"boobie",
-		"breasts",
-		"boob_fuck",
-		"boob_fondling",
-		"boob_size_difference",
-	}
 
-	var hornyUrl string
-
+	client := &http.Client{}
+	e6Content.Image = false
+	e6Content.Video = false
 	for {
 		randomBoobs := boobTags[rand.Intn(len(boobTags))]
 		boobUrl := "https://e621.net/posts.json?tags=rating%3Aexplicit+squirrel+paws+" + randomBoobs
@@ -104,11 +107,12 @@ func docRoot(w http.ResponseWriter, req *http.Request) {
 			break
 		}
 	}
-
-	e6Content.Image = false
-	e6Content.Video = false
 	findExtension(hornyUrl)
 	e6Content.Url = hornyUrl
+}
+
+func docRoot(w http.ResponseWriter, req *http.Request) {
+	grabtiddy()
 	tpl.ExecuteTemplate(w, IndexHtml, e6Content)
 }
 
