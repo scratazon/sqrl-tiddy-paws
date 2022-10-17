@@ -79,7 +79,7 @@ func findExtension(hornyUrl string) {
 	}
 }
 
-func grabtiddy() {
+func grabTiddy() {
 	// Use a pseudo-random value for rand
 	rand.Seed(time.Now().UnixNano())
 
@@ -112,7 +112,7 @@ func grabtiddy() {
 }
 
 func docRoot(w http.ResponseWriter, req *http.Request) {
-	grabtiddy()
+	grabTiddy()
 	tpl.ExecuteTemplate(w, IndexHtml, e6Content)
 }
 
